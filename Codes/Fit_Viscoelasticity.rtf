@@ -1,33 +1,24 @@
-{\rtf1\ansi\ansicpg1252\cocoartf1671
-{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
-{\*\expandedcolortbl;;\csgray\c0;}
-\margl1440\margr1440\vieww16020\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+# This script is used to fit the frequency dependences of the elastic and viscous moduli to the Jeffreys model.
+# x       --	frequency (in Hz)
+# f1(x)		--	elastic modulus
+# f2(x)		--	viscous modulus
+# eta0, eta1	--	viscosities (in Pa s)
+# tau0, tau1	--	shear relaxation time constants (in s)
+# pKH.dat	--	first portion is data for elastic modulus; second portion is data for viscous modulus
+# to use, type "gnuplot Fit_Viscoelasticity"
+#
 
-\f0\fs24 \cf0 # This script is used to fit the frequency dependences of the elastic and viscous moduli to the Jeffreys model.\
-# x		\'97	frequency (in Hz)\
-# f1(x)		\'97	elastic modulus\
-# f2(x)		\'97	viscous modulus\
-# eta0, eta1	\'97	viscosities (in Pa s)\
-# tau0, tau1	\'97	shear relaxation time constants (in s)\
-# pKH.dat	\'97	first portion is data for elastic modulus; second portion is data for viscous modulus\
-# to use, type \'93gnuplot Fit_Viscoelasticity\'94\
-#\
-\
-# Define elastic and viscous modulus functions of the Jeffreys model\
-\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+# Define elastic and viscous modulus functions of the Jeffreys model
+f1(x)=(2*pi*x)**2*tau0*eta0/(1+(2*pi*x*tau0)**2)+(2*pi*x)**2*tau1*eta1/(1+(2*pi*x*tau1)**2)
+f2(x)=(2*pi*x)*eta0/(1+(2*pi*x*tau0)**2)+(2*pi*x)*eta1/(1+(2*pi*x*tau1)**2)
+pi=3.1415926
 
-\f1\fs22 \cf2 \CocoaLigature0 f1(x)=(2*pi*x)**2*tau0*eta0/(1+(2*pi*x*tau0)**2)+(2*pi*x)**2*tau1*eta1/(1+(2*pi*x*tau1)**2)\
-f2(x)=(2*pi*x)*eta0/(1+(2*pi*x*tau0)**2)+(2*pi*x)*eta1/(1+(2*pi*x*tau1)**2)\
-pi=3.1415926\
-\
-# Set initial values for parameters\
-eta0=0.077\
-tau0=2.90E-3\
-eta1=0.26\
-tau1=0.038\
-\
-# Do the fit\
-f(x,y) = y==0 ? f1(x) : f2(x)\
-fit f(x,y) "pKH.dat" using 1:-2:2:(1) via eta0,tau0,eta1,tau1}
+# Set initial values for parameters
+eta0=0.077
+tau0=2.90E-3
+eta1=0.26
+tau1=0.038
+
+# Do the fit
+f(x,y) = y==0 ? f1(x) : f2(x)
+fit f(x,y) "pKH.dat" using 1:-2:2:(1) via eta0,tau0,eta1,tau1
