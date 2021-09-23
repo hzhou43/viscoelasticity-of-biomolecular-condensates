@@ -1,4 +1,4 @@
-# OT-based-measurement-of-viscoelasticity-and-interfacial-tension-of-biomolecular-condensates
+# viscoelasticity-of-biomolecular-condensates
 #
 Codes used for data analyses are found under Codes
 #
