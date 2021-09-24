@@ -1,14 +1,14 @@
-# This script is used to fit the frequency dependences of the elastic and viscous moduli to the Jeffreys model.
+# This script is used to fit the frequency dependences of the elastic and viscous moduli to the Burgers model.
 # x		—	frequency (in Hz)
 # f1(x)		—	elastic modulus
 # f2(x)		—	viscous modulus
 # eta0, eta1	—	viscosities (in Pa s)
 # tau0, tau1	—	shear relaxation time constants (in s)
 # pKH.dat	—	first portion is data for elastic modulus; second portion is data for viscous modulus
-# to use, type “gnuplot Fit_Viscoelasticity”
+# to use, type “gnuplot fit_viscoelasticity”
 #
 
-# Define elastic and viscous modulus functions of the Jeffreys model
+# Define elastic and viscous modulus functions of the Burgers model
 f1(x)=(2*pi*x)**2*tau0*eta0/(1+(2*pi*x*tau0)**2)+(2*pi*x)**2*tau1*eta1/(1+(2*pi*x*tau1)**2)
 f2(x)=(2*pi*x)*eta0/(1+(2*pi*x*tau0)**2)+(2*pi*x)*eta1/(1+(2*pi*x*tau1)**2)
 pi=3.1415926
