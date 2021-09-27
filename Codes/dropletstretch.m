@@ -1,8 +1,12 @@
-function [output] = forcestretch(Filename,n,p,q)
+function [output] = dropletstretch(Filename,Diameter,Kt1,Kt2,n,p,q)
 
-% n is moving mean window
-% p and q are to shift the data such that they center around 0 on the y
-% axis
+% Input filename as in 'stretchfile.h5'
+% Diameter is the edge to edge distance of the droplet in um before stretching
+% Kt1 and Kt2 are the x components of the stiffnesses of traps 1 and 2 in
+% pN/um
+% n is the number (default 5000) of points for calculating moving average
+% p and q are to shift the data such that 
+% they center around 0 on the y axis
 
 %parsing
 F1x = h5read(Filename,'/Force HF/Force 1x');
@@ -17,7 +21,6 @@ t = timeindex./78125;
 F1x = movmean(F1x,n);
 F2x = movmean(F2x,n);
 trapposition = trapposition-trapposition(1);
-trapposition = movmean(trapposition,n);
 trapposition = trapposition/0.249; %trap position in microns
 
 %fitting
@@ -69,7 +72,13 @@ v = c3.v;
 x0 = c3.x0; 
 trapfit = v*t + x0;
 
-c_sys0 = (f2-f1)/(2*-v);
+chi_sys0 = (f2-f1)/(2*-v);
+
+chi_0 = 1/(1/chi_sys0-1/Kt1-1/Kt2);
+
+conversion = (log(Diameter/2-1)+0.68)/pi;
+
+ST = conversion*chi_0;
 
 %plotting
 figure
@@ -84,13 +93,10 @@ xlabel('Time (s)')
 ylabel('Force 1x & 2x (pN)')
 
 yyaxis right
-plot(t,trap,'g.','MarkerSize',1)
+plot(t,trapposition,'g.','MarkerSize',1)
 plot(t,trapfit,'g','MarkerSize',2)
 grid on
 
-% The output gives the slope and intercept of the force profiles of the two
-% beads, the chi0 and the chi_sys0 values. These are further processed to
-% obtain the surface tension of the droplet.
-output = [f1 b1 f2 b2 v x0 c_sys0];
+output = ['The surface tension of a droplet measuring ',num2str(Diameter),' um is ',num2str(ST),' pN/um'];
 
 end
